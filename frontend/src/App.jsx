@@ -51,6 +51,8 @@ export default function App() {
       
       if (data.success) {
         setResp(data)
+        // Automatically redirect to PDF viewer after successful enhancement
+        navigate('/pdf-viewer', { state: { resumeData: data } })
       } else {
         setError(data.error || data.detail || data.message || 'Enhancement failed')
       }

@@ -1,0 +1,24 @@
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex)
+ restricted \write18 enabled.
+entering extended mode
+(./resume_2103e1e4efa446b5853bc9ca60c3ff01_57f731ef.tex
+LaTeX2e <2024-11-01> patch level 2
+L3 programming layer <2025-01-18>
+(/usr/local/texlive/2025basic/texmf-dist/tex/latex/base/article.cls
+Document Class: article 2024/06/29 v1.4n Standard LaTeX document class
+(/usr/local/texlive/2025basic/texmf-dist/tex/latex/base/size11.clo))
+(/usr/local/texlive/2025basic/texmf-dist/tex/latex/base/latexsym.sty)
+
+! LaTeX Error: File `fullpage.sty' not found.
+
+Type X to quit or <RETURN> to proceed,
+or enter new name. (Default extension: sty)
+
+Enter file name: 
+! Emergency stop.
+<read *> 
+         
+l.5 \usepackage
+               {titlesec}^^M
+!  ==> Fatal error occurred, no output PDF file produced!
+Transcript written on resume_2103e1e4efa446b5853bc9ca60c3ff01_57f731ef.log.

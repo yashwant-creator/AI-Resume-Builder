@@ -1,0 +1,168 @@
+\documentclass[letterpaper,11pt]{article}
+
+\usepackage{latexsym}
+\usepackage[empty]{fullpage}
+\usepackage{titlesec}
+\usepackage{marvosym}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{verbatim}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyhdr}
+\usepackage[english]{babel}
+\usepackage{tabularx}
+\input{glyphtounicode}
+
+\pagestyle{fancy}
+\fancyhf{} % clear all header and footer fields
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% Adjust margins
+\addtolength{\oddsidemargin}{-0.5in}
+\addtolength{\evensidemargin}{-0.5in}
+\addtolength{\textwidth}{1in}
+\addtolength{\topmargin}{-.5in}
+\addtolength{\textheight}{1.0in}
+
+\urlstyle{same}
+
+\raggedbottom
+\raggedright
+\setlength{\tabcolsep}{0in}
+
+% Sections formatting
+\titleformat{\section}{
+  \vspace{-4pt}\scshape\raggedright\large
+}{}{0em}{}[\color{black}\titlerule \vspace{-5pt}]
+
+% Ensure that generate pdf is machine readable/ATS parsable
+\pdfgentounicode=1
+
+%-------------------------
+% Custom commands
+\newcommand{\resumeItem}[1]{
+  \item\small{
+    {#1 \vspace{-2pt}}
+  }
+}
+
+\newcommand{\resumeSubheading}[4]{
+  \vspace{-2pt}\item
+    \begin{tabular*}{0.97\textwidth}[t]{l@{\extracolsep{\fill}}r}
+      \textbf{#1} & #2 \\
+      \textit{\small#3} & \textit{\small #4} \\
+    \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeSubSubheading}[2]{
+    \item
+    \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+      \textit{\small#1} & \textit{\small #2} \\
+    \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeProjectHeading}[2]{
+    \item
+    \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+      \small#1 & #2 \\
+    \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeSubItem}[1]{\resumeItem{#1}\vspace{-4pt}}
+
+\renewcommand\labelitemii{$\vcenter{\hbox{\tiny$\bullet$}}$}
+
+\newcommand{\resumeSubHeadingListStart}{\begin{itemize}[leftmargin=0.15in, label={}]}
+\newcommand{\resumeSubHeadingListEnd}{\end{itemize}}
+\newcommand{\resumeItemListStart}{\begin{itemize}}
+\newcommand{\resumeItemListEnd}{\end{itemize}\vspace{-5pt}}
+
+%-------------------------------------------
+%%%%%%  RESUME STARTS HERE  %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+%----------HEADING----------
+\begin{center}
+    \textbf{\Huge \scshape Yashwant Ponnaganti} \\ \vspace{1pt}
+    \small 781-813-0396 $|$ \href{mailto:yash.ponnaganti@gmail.com}{\underline{yash.ponnaganti@gmail.com}} $|$ 
+    \href{https://linkedin.com/in/yashwant-ponnaganti}{\underline{linkedin.com/in/yashwant-ponnaganti}} $|$
+    \href{https://github.com/yashwant-creator}{\underline{github.com/yashwant-creator}}
+\end{center}
+
+%-----------EDUCATION-----------
+\section{Education}
+  \resumeSubHeadingListStart
+    \resumeSubheading
+      {University of Maryland, College Park}{College Park, MD}
+      {Bachelor of Science in Computer Science (Machine Learning Specialization)}{Expected May 2028}
+    \resumeSubheading
+      {Double Major: Applied Mathematics}{}
+      {Presidential Scholarship Recipient}{}
+  \resumeSubHeadingListEnd
+
+%-----------EXPERIENCE-----------
+\section{Experience}
+  \resumeSubHeadingListStart
+
+    \resumeSubheading
+      {ML Engineering Intern}{June 2025 -- Present}
+      {Brown University \& University of Rhode Island}{Remote}
+      \resumeItemListStart
+        \resumeItem{Built a Retrieval-Augmented Generation (RAG) chatbot for Polycystic Kidney Disease support, processing 100+ research papers using FAISS embeddings.}
+        \resumeItem{Developed a scalable, low-latency asynchronous backend for real-time query responses, enhancing user experience.}
+        \resumeItem{Collaborated with cross-functional teams to integrate OpenAI GPT-4o-mini for advanced language processing.}
+      \resumeItemListEnd
+
+    \resumeSubheading
+      {Computer Hardware Engineering Intern}{June 2024 -- Aug 2024}
+      {University of Rhode Island, Biomedical Engineering}{Kingston, RI}
+      \resumeItemListStart
+        \resumeItem{Developed a smart bottle accessory for real-time hydration reminders, improving user hydration habits.}
+        \resumeItem{Conducted an international market survey with 90+ participants to assess product-market fit, guiding product development.}
+        \resumeItem{Presented the prototype at IEEE MIT URTC 2024, receiving positive feedback from industry experts.}
+      \resumeItemListEnd
+
+    \resumeSubheading
+      {ML Engineering Intern}{June 2023 -- Aug 2023}
+      {University of Rhode Island, Biomedical Engineering}{Kingston, RI}
+      \resumeItemListStart
+        \resumeItem{Developed a Human Activity Recognition (HAR) model using smartwatch data to predict ADHD onset in children (ages 7–11).}
+        \resumeItem{Implemented feature engineering and regression algorithms for accurate activity tracking, achieving high prediction accuracy.}
+        \resumeItem{Utilized Python and Scikit-learn for model development, enhancing data processing efficiency.}
+      \resumeItemListEnd
+
+  \resumeSubHeadingListEnd
+
+%-----------PROJECTS-----------
+\section{Projects}
+    \resumeSubHeadingListStart
+      \resumeProjectHeading
+          {\textbf{Smart Hydration System} $|$ \emph{Arduino, Sensors, Embedded Systems}}{June 2024 -- Aug 2024}
+          \resumeItemListStart
+            \resumeItem{Engineered a smart hydration system using Arduino and sensors to provide real-time hydration reminders.}
+            \resumeItem{Integrated haptic feedback and LED indicators for user notifications, enhancing user interaction.}
+          \resumeItemListEnd
+      \resumeProjectHeading
+          {\textbf{ADHD Prediction Model} $|$ \emph{Python, Scikit-learn, Data Analysis}}{June 2023 -- Aug 2023}
+          \resumeItemListStart
+            \resumeItem{Developed a predictive model for ADHD onset using smartwatch data, focusing on feature engineering and regression techniques.}
+            \resumeItem{Visualized data insights using Matplotlib to support model findings and improve interpretability.}
+          \resumeItemListEnd
+    \resumeSubHeadingListEnd
+
+%-----------TECHNICAL SKILLS-----------
+\section{Technical Skills}
+ \begin{itemize}[leftmargin=0.15in, label={}]
+    \small{\item{
+     \textbf{Languages}{: Python, Java, C/C++, SQL, JavaScript, HTML/CSS} \\
+     \textbf{Frameworks}{: Flutter, FastAPI, Scikit-learn} \\
+     \textbf{Developer Tools}{: Git, Docker, Arduino, Vector Databases, FAISS} \\
+     \textbf{Libraries}{: NumPy, Matplotlib, OpenAI GPT-4o-mini}
+    }}
+ \end{itemize}
+
+%-------------------------------------------
+\end{document}

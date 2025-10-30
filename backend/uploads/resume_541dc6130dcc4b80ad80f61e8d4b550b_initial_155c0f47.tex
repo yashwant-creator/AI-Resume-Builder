@@ -1,0 +1,163 @@
+\documentclass[letterpaper,11pt]{article}
+
+\usepackage{latexsym}
+\usepackage[empty]{fullpage}
+\usepackage{titlesec}
+\usepackage{marvosym}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{verbatim}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyhdr}
+\usepackage[english]{babel}
+\usepackage{tabularx}
+\input{glyphtounicode}
+
+\pagestyle{fancy}
+\fancyhf{} % clear all header and footer fields
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% Adjust margins
+\addtolength{\oddsidemargin}{-0.5in}
+\addtolength{\evensidemargin}{-0.5in}
+\addtolength{\textwidth}{1in}
+\addtolength{\topmargin}{-.5in}
+\addtolength{\textheight}{1.0in}
+
+\urlstyle{same}
+
+\raggedbottom
+\raggedright
+\setlength{\tabcolsep}{0in}
+
+% Sections formatting
+\titleformat{\section}{
+  \vspace{-4pt}\scshape\raggedright\large
+}{}{0em}{}[\color{black}\titlerule \vspace{-5pt}]
+
+% Ensure that generate pdf is machine readable/ATS parsable
+\pdfgentounicode=1
+
+%-------------------------
+% Custom commands
+\newcommand{\resumeItem}[1]{
+  \item\small{
+    {#1 \vspace{-2pt}}
+  }
+}
+
+\newcommand{\resumeSubheading}[4]{
+  \vspace{-2pt}\item
+    \begin{tabular*}{0.97\textwidth}[t]{l@{\extracolsep{\fill}}r}
+      \textbf{#1} & #2 \\
+      \textit{\small#3} & \textit{\small #4} \\
+    \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeSubSubheading}[2]{
+    \item
+    \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+      \textit{\small#1} & \textit{\small #2} \\
+    \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeProjectHeading}[2]{
+    \item
+    \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+      \small#1 & #2 \\
+    \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeSubItem}[1]{\resumeItem{#1}\vspace{-4pt}}
+
+\renewcommand\labelitemii{$\vcenter{\hbox{\tiny$\bullet$}}$}
+
+\newcommand{\resumeSubHeadingListStart}{\begin{itemize}[leftmargin=0.15in, label={}]}
+\newcommand{\resumeSubHeadingListEnd}{\end{itemize}}
+\newcommand{\resumeItemListStart}{\begin{itemize}}
+\newcommand{\resumeItemListEnd}{\end{itemize}\vspace{-5pt}}
+
+%-------------------------------------------
+%%%%%%  RESUME STARTS HERE  %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+%----------HEADING----------
+\begin{center}
+    \textbf{\Huge \scshape Yashwant Ponnaganti} \\ \vspace{1pt}
+    \small 781-813-0396 $|$ \href{mailto:yash.ponnaganti@gmail.com}{\underline{yash.ponnaganti@gmail.com}} $|$ 
+    \href{https://linkedin.com/in/yashwant-ponnaganti}{\underline{linkedin.com/in/yashwant-ponnaganti}} $|$
+    \href{https://github.com/yashwant-creator}{\underline{github.com/yashwant-creator}}
+\end{center}
+
+%-----------EDUCATION-----------
+\section{Education}
+  \resumeSubHeadingListStart
+    \resumeSubheading
+      {University of Maryland, College Park}{College Park, MD}
+      {Bachelor of Science in Computer Science (Machine Learning Specialization), Double Major: Applied Mathematics}{Expected May 2028}
+      \resumeItemListStart
+        \resumeItem{Presidential Scholarship Recipient}
+      \resumeItemListEnd
+  \resumeSubHeadingListEnd
+
+%-----------EXPERIENCE-----------
+\section{Experience}
+  \resumeSubHeadingListStart
+
+    \resumeSubheading
+      {ML Engineering Intern}{June 2025 -- Present}
+      {Brown University \& University of Rhode Island}{Remote}
+      \resumeItemListStart
+        \resumeItem{Built a Retrieval-Augmented Generation (RAG) chatbot for Polycystic Kidney Disease support, processing over 100 research papers using FAISS embeddings.}
+        \resumeItem{Developed a scalable, low-latency asynchronous backend for real-time query responses, enhancing user interaction.}
+        \resumeItem{Collaborated with cross-functional teams to integrate machine learning solutions into existing systems.}
+      \resumeItemListEnd
+
+    \resumeSubheading
+      {Computer Hardware Engineering Intern}{June 2024 -- Aug 2024}
+      {University of Rhode Island, Biomedical Engineering}{Kingston, RI}
+      \resumeItemListStart
+        \resumeItem{Developed a smart bottle accessory for real-time hydration reminders, improving user health awareness.}
+        \resumeItem{Conducted an international market survey with 90+ participants to assess product-market fit, leading to design improvements.}
+        \resumeItem{Presented the prototype at IEEE MIT URTC 2024, receiving positive feedback and interest from industry experts.}
+      \resumeItemListEnd
+
+    \resumeSubheading
+      {ML Engineering Intern}{June 2023 -- Aug 2023}
+      {University of Rhode Island, Biomedical Engineering}{Kingston, RI}
+      \resumeItemListStart
+        \resumeItem{Developed a Human Activity Recognition (HAR) model using smartwatch data to predict ADHD onset in children aged 7–11.}
+        \resumeItem{Implemented feature engineering and regression algorithms for accurate activity tracking, achieving high prediction accuracy.}
+        \resumeItem{Collaborated with researchers to refine model parameters, enhancing the reliability of predictions.}
+      \resumeItemListEnd
+
+  \resumeSubHeadingListEnd
+
+%-----------PROJECTS-----------
+\section{Projects}
+    \resumeSubHeadingListStart
+      \resumeProjectHeading
+          {\textbf{RAG Chatbot for Healthcare} $|$ \emph{Python, FAISS, OpenAI GPT-4o-mini}}{June 2025 -- Present}
+          \resumeItemListStart
+            \resumeItem{Engineered a chatbot leveraging Retrieval-Augmented Generation to assist in healthcare support, processing extensive medical literature.}
+            \resumeItem{Implemented FAISS for efficient similarity search, enhancing the chatbot's response accuracy.}
+            \resumeItem{Collaborated with healthcare professionals to ensure the chatbot's responses were medically accurate and helpful.}
+          \resumeItemListEnd
+    \resumeSubHeadingListEnd
+
+%-----------TECHNICAL SKILLS-----------
+\section{Technical Skills}
+ \begin{itemize}[leftmargin=0.15in, label={}]
+    \small{\item{
+     \textbf{Languages}{: Python, Java, C/C++, SQL, JavaScript, HTML/CSS} \\
+     \textbf{Frameworks}{: Flutter, FastAPI, Scikit-learn} \\
+     \textbf{Tools}{: Git, Docker, FAISS, OpenAI, Arduino, CAD} \\
+     \textbf{Libraries}{: NumPy, Pandas, Matplotlib, TensorFlow}
+    }}
+ \end{itemize}
+
+%-------------------------------------------
+\end{document}

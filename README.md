@@ -10,7 +10,72 @@ A powerful system that transforms your resume to match any job description, crea
 - **Professional UI**: Clean, intuitive interface with progress indicators
 - **Real-time Processing**: Fast analysis and PDF generation
 
-## 🚀 Quick Start
+## � System Architecture
+
+```
+┌──────────────────────────────────────────────────────────────────────┐
+│                           CLIENT LAYER                               │
+│                                                                      │
+│   ┌─────────────┐         ┌─────────────┐        ┌─────────────┐    │
+│   │   Resume    │         │    Job      │        │   Chat      │    │
+│   │   Upload    │         │Description  │        │ Interface   │    │
+│   └─────┬───────┘         └─────┬───────┘        └─────┬───────┘    │
+│         │                       │                      │            │
+└─────────┼───────────────────────┼──────────────────────┼────────────┘
+          │                       │                      │
+          ▼                       ▼                      ▼
+┌──────────────────────────────────────────────────────────────────────┐
+│                        FRONTEND (React + Vite)                       │
+│                              Port: 5174                              │
+│                                                                      │
+│   ┌─────────────┐         ┌─────────────┐        ┌─────────────┐    │
+│   │ File Upload │         │  PDF View   │        │ Chat UI     │    │
+│   │  Handler    │         │ Component   │        │ Component   │    │
+│   └─────┬───────┘         └─────┬───────┘        └─────┬───────┘    │
+│         │                       │                      │            │
+└─────────┼───────────────────────┼──────────────────────┼────────────┘
+          │                       │                      │
+          └─────────────┬─────────┴──────────┬──────────┘
+                       │                     │
+                       ▼                     ▼
+┌──────────────────────────────────────────────────────────────────────┐
+│                         BACKEND (FastAPI)                            │
+│                             Port: 8000                               │
+│                                                                      │
+│   ┌─────────────┐     ┌─────────────┐     ┌─────────────────┐       │
+│   │   Resume    │     │   GPT-4     │     │    LaTeX        │       │
+│   │   Parser    │ --> │  Generator  │ --> │   Compiler      │       │
+│   └─────────────┘     └─────────────┘     └─────────────────┘       │
+│          │                   │                     │                 │
+│          │                   │                     │                 │
+│   ┌─────────────┐     ┌─────────────┐     ┌─────────────────┐       │
+│   │  Template   │     │ Refinement  │     │    Error        │       │
+│   │  Storage    │     │   Engine    │ <-- │    Handler      │       │
+│   └─────────────┘     └─────────────┘     └─────────────────┘       │
+│                                                                      │
+└──────────────────────────────────────────────────────────────────────┘
+
+Data Flow:
+1. User uploads resume + job description
+2. Frontend sends files to backend (/api/enhance-resume)
+3. Backend processes:
+   - Parses resume (PDF/DOCX/TXT)
+   - Generates LaTeX using GPT-4
+   - Compiles LaTeX to PDF
+4. If compilation fails:
+   - Error handler activates
+   - GPT-4 refines LaTeX
+   - Retries compilation (3-5 attempts)
+5. Success:
+   - PDF saved and URL returned
+   - Frontend displays result
+6. User can request refinements via chat
+   - Sent to /api/refine-resume
+   - Processed with lower temperature
+   - Updates reflected in real-time
+```
+
+## �🚀 Quick Start
 
 ### Backend (FastAPI)
 ```bash
@@ -70,3 +135,45 @@ Next steps:
 - Implement JD parsing and resume parsing endpoints in `backend/main.py`.
 - Wire LLM integration using environment variable `OPENAI_API_KEY` (optional).
 - Implement PDF generation from `backend/templates/resume_template.html`.
+
+graph TD
+    %% User Interface
+    User([User]) --> Frontend[Frontend React/Vite<br/>Port: 5174]
+    
+    %% Frontend to Backend Communication
+    Frontend -->|POST /api/enhance-resume<br/>Upload Resume + Job Description| Backend[Backend FastAPI<br/>Port: 8000]
+    
+    %% Backend Processing
+    Backend --> Parser[Resume Parser<br/>PDF/DOCX/TXT]
+    Parser -->|Structured Data| GPT[GPT-4 Processing<br/>temp: 0.3]
+    GPT -->|LaTeX Code| LatexCompiler[LaTeX Compiler<br/>pdflatex]
+    
+    %% Compilation Results
+    LatexCompiler -->|Success| SavePDF[Save PDF]
+    LatexCompiler -->|Error| FeedbackLoop[Feedback Loop<br/>3-5 attempts]
+    
+    %% Feedback Loop
+    FeedbackLoop -->|Error + LaTeX| GPTFix[GPT-4 Fix<br/>temp: 0.1]
+    GPTFix --> LatexCompiler
+    
+    %% PDF Return
+    SavePDF --> Frontend
+    
+    %% Refinement Flow
+    Frontend -->|POST /api/refine-resume<br/>Chat Request| RefinementGPT[GPT-4 Refinement<br/>temp: 0.05]
+    RefinementGPT --> Validation[Validation<br/>Length + Structure]
+    Validation --> LatexCompiler
+    
+    %% Styling
+    classDef frontend fill:#42b883,stroke:#333,stroke-width:2px,color:white
+    classDef backend fill:#306998,stroke:#333,stroke-width:2px,color:white
+    classDef process fill:#666,stroke:#333,stroke-width:2px,color:white
+    classDef gpt fill:#10a37f,stroke:#333,stroke-width:2px,color:white
+    
+    %% Apply styles
+    class Frontend frontend
+    class Backend,Parser,LatexCompiler backend
+    class SavePDF,Validation,FeedbackLoop process
+    class GPT,GPTFix,RefinementGPT gpt
+
+

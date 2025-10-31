@@ -148,23 +148,33 @@ def refine_latex_resume(current_latex: str, user_feedback: str, job_description:
         str: Refined LaTeX code
     """
     
-    prompt = f"""
-You are helping refine a LaTeX resume based on user feedback. Your task is to modify the LaTeX code to incorporate the feedback while:
-1. Maintaining the exact LaTeX structure and formatting
-2. Keeping it ATS-friendly and professional
-3. Ensuring changes align with the target job requirements
-4. Preserving all working LaTeX commands and syntax
+    prompt = f"""I have a LaTeX resume document. I need you to make a SMALL, SPECIFIC edit to it.
 
-CURRENT LATEX RESUME:
+Here is the COMPLETE resume document:
+
+---BEGIN RESUME---
 {current_latex}
+---END RESUME---
 
-USER FEEDBACK/SUGGESTIONS:
-{user_feedback}
+The user wants you to make this change:
+"{user_feedback}"
 
-JOB DESCRIPTION (for context):
-{job_description[:1000]}
+INSTRUCTIONS:
+1. Take the ENTIRE resume above (from \\documentclass to \\end{{document}})
+2. Find the part the user wants to change
+3. Make ONLY that small change
+4. Return the COMPLETE document with that one change applied
 
-Return ONLY the complete updated LaTeX code with no explanations. The code must start with \\documentclass and end with \\end{{document}}.
+CRITICAL RULES:
+- You MUST return the ENTIRE document from \\documentclass{{...}} to \\end{{document}}
+- Do NOT return just a section or snippet
+- Do NOT rewrite or regenerate the resume
+- Do NOT change anything except what the user specifically asked for
+- Keep all names, dates, job titles, companies, projects, skills EXACTLY as they are
+- Keep all formatting and structure EXACTLY as it is
+
+OUTPUT FORMAT:
+Return ONLY the complete LaTeX code. No explanations. No markdown fences. Just the LaTeX starting with \\documentclass and ending with \\end{{document}}.
 """
 
     try:
@@ -172,11 +182,11 @@ Return ONLY the complete updated LaTeX code with no explanations. The code must 
         response = client.chat.completions.create(
             model="gpt-4o",
             messages=[
-                {"role": "system", "content": "You are an expert resume editor. Modify LaTeX resumes based on user feedback while maintaining professional quality and ATS compatibility. Return ONLY valid LaTeX code."},
+                {"role": "system", "content": "You are a text editor that makes precise edits to LaTeX documents. When given a complete document and a requested change, you return the ENTIRE document with only that specific change applied. You never summarize, abbreviate, or return partial documents. You always return the complete document from start to finish."},
                 {"role": "user", "content": prompt}
             ],
-            max_tokens=4000,
-            temperature=0.2,
+            max_tokens=4096,
+            temperature=0.05,
             timeout=60
         )
         
@@ -192,15 +202,27 @@ Return ONLY the complete updated LaTeX code with no explanations. The code must 
         
         refined_latex = refined_latex.strip()
         
-        # Basic validation
+        # Strict validation - ensure we got a complete document
         if not refined_latex.startswith('\\documentclass'):
-            print(f"⚠️  Warning: Refined LaTeX doesn't start with \\documentclass")
+            print(f"⚠️  ERROR: Refined LaTeX doesn't start with \\documentclass - LLM returned a snippet!")
+            print(f"⚠️  First 200 chars: {refined_latex[:200]}")
             return current_latex  # Return original if refinement fails
         
-        # Ensure document ends properly
         if not refined_latex.strip().endswith('\\end{document}'):
+            print(f"⚠️  WARNING: Refined LaTeX doesn't end with \\end{{document}}")
             refined_latex += '\n\\end{document}\n'
-            
+        
+        # Check if the response is suspiciously short (likely a snippet)
+        original_length = len(current_latex)
+        refined_length = len(refined_latex)
+        
+        if refined_length < original_length * 0.5:  # Less than 50% of original
+            print(f"⚠️  ERROR: Refined LaTeX is too short ({refined_length} vs {original_length} chars)")
+            print(f"⚠️  LLM likely returned a snippet instead of the full document!")
+            print(f"⚠️  Returning original to prevent data loss")
+            return current_latex
+        
+        print(f"✅ Refinement looks good: {original_length} -> {refined_length} chars")
         return refined_latex
         
     except Exception as e:

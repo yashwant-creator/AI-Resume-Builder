@@ -25,7 +25,7 @@ app = FastAPI(title="ATS-Builder Backend")
 # Allow CORS from Vite dev server during development
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
+    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173", "http://localhost:5174", "http://127.0.0.1:5174"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -232,7 +232,7 @@ async def download_pdf(filename: str):
 
 
 @app.post("/api/refine-resume")
-async def refine_resume(latex_code: str = Form(...), feedback: str = Form(...), job_description: str = Form(...)):
+async def refine_resume(latex_code: str = Form(...), feedback: str = Form(...), job_description: str = Form("")):
     """Refine existing LaTeX resume based on user feedback."""
     try:
         if not os.getenv("OPENAI_API_KEY"):
@@ -249,39 +249,85 @@ async def refine_resume(latex_code: str = Form(...), feedback: str = Form(...), 
         # Refine LaTeX using GPT
         refined_latex = refine_latex_resume(latex_code, feedback, job_description)
         
-        # Compile refined LaTeX
+        # Save initial refined LaTeX for debugging
         uid = uuid.uuid4().hex
-        compilation_result = compile_with_fallback(refined_latex, f"refined_{uid}")
+        latex_path = save_latex_file(refined_latex, f"refined_{uid}_initial")
+        print(f"📄 Initial refined LaTeX saved to: {latex_path}")
         
-        if compilation_result["success"]:
-            pdf_filename = os.path.basename(compilation_result["pdf_path"])
-            latex_path = save_latex_file(refined_latex, f"refined_{uid}")
+        # Compile refined LaTeX with feedback loop
+        MAX_ATTEMPTS = 3
+        attempt = 0
+        compilation_success = False
+        
+        while attempt < MAX_ATTEMPTS and not compilation_success:
+            print(f"🔨 Refinement compilation attempt {attempt + 1}/{MAX_ATTEMPTS}...")
+            compilation_result = compile_with_fallback(refined_latex, f"refined_{uid}_attempt{attempt}")
             
-            # Generate new suggestions
-            new_suggestions = get_resume_suggestions(refined_latex, job_description)
-            
-            return JSONResponse(
-                status_code=200,
-                content={
-                    "success": True,
-                    "message": "Resume refined successfully",
-                    "pdf_filename": pdf_filename,
-                    "latex_path": latex_path,
-                    "download_url": f"/api/download-pdf/{pdf_filename}",
-                    "suggestions": new_suggestions,
-                    "latex_code": refined_latex[:500] + "..." if len(refined_latex) > 500 else refined_latex
-                }
-            )
-        else:
-            return JSONResponse(
-                status_code=400,
-                content={
-                    "success": False,
-                    "error": "LaTeX compilation failed after refinement",
-                    "details": compilation_result,
-                    "latex_code": refined_latex
-                }
-            )
+            if compilation_result["success"]:
+                compilation_success = True
+                pdf_filename = os.path.basename(compilation_result["pdf_path"])
+                
+                # Save successful LaTeX version
+                final_latex_path = save_latex_file(refined_latex, f"refined_{uid}_final")
+                print(f"✅ Refinement compilation succeeded on attempt {attempt + 1}")
+                print(f"📄 Final refined LaTeX saved to: {final_latex_path}")
+                
+                # Generate new suggestions
+                new_suggestions = get_resume_suggestions(refined_latex, job_description)
+                
+                return JSONResponse(
+                    status_code=200,
+                    content={
+                        "success": True,
+                        "message": f"Resume refined successfully (compiled on attempt {attempt + 1}/{MAX_ATTEMPTS})",
+                        "pdf_filename": pdf_filename,
+                        "latex_path": final_latex_path,
+                        "download_url": f"/api/download-pdf/{pdf_filename}",
+                        "suggestions": new_suggestions,
+                        "latex_code": refined_latex,
+                        "compilation_attempts": attempt + 1
+                    }
+                )
+            else:
+                # Compilation failed
+                error_log = compilation_result.get("latex_log", "No log available")
+                print(f"❌ Refinement compilation failed on attempt {attempt + 1}")
+                
+                if attempt < MAX_ATTEMPTS - 1:
+                    # Send error back to GPT for fixing
+                    from gpt_latex_generator import fix_latex_compilation_errors
+                    refined_latex = fix_latex_compilation_errors(refined_latex, error_log, attempt + 1)
+                    
+                    # Save the fixed attempt
+                    attempt_latex_path = save_latex_file(refined_latex, f"refined_{uid}_fixed_attempt{attempt}")
+                    print(f"📄 Fixed refined LaTeX (attempt {attempt + 1}) saved to: {attempt_latex_path}")
+                    
+                    attempt += 1
+                else:
+                    # Max attempts reached - return error
+                    print(f"💥 All {MAX_ATTEMPTS} refinement compilation attempts failed")
+                    
+                    # Extract key error lines from log
+                    error_lines = []
+                    if error_log:
+                        for line in error_log.split('\n'):
+                            if line.startswith('!') or 'error' in line.lower():
+                                error_lines.append(line)
+                    
+                    return JSONResponse(
+                        status_code=400,
+                        content={
+                            "success": False,
+                            "error": f"LaTeX compilation failed after refinement ({MAX_ATTEMPTS} attempts)",
+                            "details": compilation_result.get("error"),
+                            "error_analysis": compilation_result.get("error_analysis", {}),
+                            "suggestions": compilation_result.get("suggestions", []),
+                            "latex_path": latex_path,
+                            "error_lines": error_lines[:10],
+                            "compilation_attempts": attempt + 1,
+                            "latex_code": refined_latex
+                        }
+                    )
             
     except Exception as e:
         print(f"Error in refine_resume: {str(e)}")
